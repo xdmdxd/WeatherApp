@@ -54,8 +54,8 @@ dependencies {
     implementation("com.intuit.ssp:ssp-android:1.1.0")
 
 // Navigation Component
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.9")
+    implementation("androidx.navigation:navigation-ui-ktx:2.8.9")
 
 // Koin (dependency injection)
     implementation("io.insert-koin:koin-android:3.5.3")
@@ -70,4 +70,6 @@ dependencies {
 // Coil
     implementation("io.coil-kt:coil:2.6.0")
 
+    //location
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 }
