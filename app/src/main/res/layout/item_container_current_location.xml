@@ -42,7 +42,7 @@
         app:layout_constraintEnd_toStartOf="@id/imageCurrentLocation"
         app:layout_constraintStart_toEndOf="@id/imageLocation"
         app:layout_constraintTop_toTopOf="@id/imageLocation"
-        tools:text="Zde je napsaná lokace" />
+        tools:text="Brtev, Praha, Czech" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageCurrentLocation"
