@@ -36,10 +36,20 @@ class HomeViewModel(private val weatherDataRepository: WeatherDataRepository) : 
 
     private fun updateAddressText(currentLocation: CurrentLocation, geocoder: Geocoder) {
         viewModelScope.launch {
-            val location = weatherDataRepository.updateAddressText(currentLocation,geocoder)
-            emitCurrentLocationUiState(currentLocation=location)
+            runCatching {
+                weatherDataRepository.updateAddressText(currentLocation, geocoder)
+            }.onSuccess { location ->
+                emitCurrentLocationUiState(currentLocation = location)
+            }.onFailure {
+                emitCurrentLocationUiState(
+                    currentLocation = currentLocation.copy(
+                        location = "N/A"
+                    )
+                )
+            }
         }
     }
+
 
     private fun emitCurrentLocationUiState(
         isLoading: Boolean = false,

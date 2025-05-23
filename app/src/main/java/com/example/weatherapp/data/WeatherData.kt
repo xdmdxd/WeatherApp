@@ -10,7 +10,7 @@ data class CurrentLocation(
     val date: String=getCurrentDate(),
     val location: String = "Vybrat lokaci",
     val latitude: Double? =null,
-    val longitude: Double?=null
+    val longitude: Double? =null
 ): WeatherData()
 
 private fun getCurrentDate(): String {
