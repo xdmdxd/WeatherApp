@@ -2,8 +2,10 @@ package com.example.weatherapp.network.repository
 
 import android.annotation.SuppressLint
 import android.location.Geocoder
+import android.util.Log
 import com.example.weatherapp.data.CurrentLocation
 import com.example.weatherapp.data.RemoteLocation
+import com.example.weatherapp.data.RemoteWeatherData
 import com.example.weatherapp.network.api.WeatherAPI
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
@@ -20,21 +22,35 @@ class WeatherDataRepository(private val weatherAPI: WeatherAPI) {
         onSuccess: (currentLocation: CurrentLocation) -> Unit,
         onFailure: () -> Unit
     ) {
+        android.util.Log.d("LocationDebug", "Requesting current location...")
+
         fusedLocationProviderClient.getCurrentLocation(
             Priority.PRIORITY_HIGH_ACCURACY,
             CancellationTokenSource().token
         ).addOnSuccessListener { location ->
-            location ?: return@addOnSuccessListener onFailure()
-            onSuccess(
-                CurrentLocation(
-                    latitude = location.latitude,
-                    longitude = location.longitude
-                )
+            if (location == null) {
+                android.util.Log.e("LocationDebug", "Location is null!")
+                onFailure()
+                return@addOnSuccessListener
+            }
+
+            val latitude = location.latitude
+            val longitude = location.longitude
+            android.util.Log.d("LocationDebug", "Lat: $latitude, Lon: $longitude")
+
+            val currentLocation = CurrentLocation(
+                latitude = latitude,
+                longitude = longitude
             )
-        }.addOnFailureListener {
+
+            onSuccess(currentLocation)
+
+        }.addOnFailureListener { exception ->
+            android.util.Log.e("LocationDebug", "Failed to get location: ${exception.message}")
             onFailure()
         }
     }
+
 
     @Suppress("DEPRECATION")
     fun updateAddressText(
@@ -43,19 +59,49 @@ class WeatherDataRepository(private val weatherAPI: WeatherAPI) {
     ): CurrentLocation {
         val latitude = currentLocation.latitude ?: return currentLocation
         val longitude = currentLocation.longitude ?: return currentLocation
-        return geocoder.getFromLocation(latitude, longitude, 1)?.let { addresses ->
-            val address = addresses[0]
-            val addressText = StringBuilder()
-            addressText.append(address.locality).append(", ")
-            addressText.append(address.adminArea).append(", ")
-            addressText.append(address.countryName)
-            currentLocation.copy(
-                location = addressText.toString()
-            )
-        } ?: currentLocation
+
+        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+        val address = addresses?.firstOrNull() ?: return currentLocation
+
+        val city = address.locality
+            ?: address.subAdminArea
+            ?: address.subLocality
+            ?: address.featureName
+            ?: "Neznámé město"
+
+        val region = address.adminArea ?: ""
+        val country = address.countryName ?: ""
+
+        val addressText = listOf(city, region, country)
+            .filter { it.isNotBlank() }
+            .joinToString(", ")
+
+        return currentLocation.copy(location = addressText)
     }
-    suspend fun  searchLocation(query: String): List<RemoteLocation>? {
-        val response=weatherAPI.searchLocation(query=query)
+
+
+    suspend fun searchLocation(query: String): List<RemoteLocation>? {
+        return try {
+            val response = weatherAPI.searchLocation(query = query)
+
+            if (response.isSuccessful) {
+                val body = response.body()
+                android.util.Log.d("APIDebug", "Success! Found ${body?.size ?: 0} results: $body")
+                body
+            } else {
+                android.util.Log.e("APIDebug", "Error ${response.code()}: ${response.errorBody()?.string()}")
+                null
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("APIDebug", "Exception during search: ${e.message}")
+            null
+        }
+    }
+
+    suspend fun getWeatherData(latitude: Double, longitude: Double): RemoteWeatherData? {
+        val response = weatherAPI.getWeatherData(query = "$latitude,$longitude")
         return if (response.isSuccessful) response.body() else null
     }
+
+
 }

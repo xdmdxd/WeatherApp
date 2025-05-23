@@ -13,6 +13,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.clearFragmentResultListener
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp.R
 import com.example.weatherapp.data.CurrentLocation
@@ -28,6 +30,14 @@ import java.util.Date
 import java.util.Locale
 
 class HomeFragment : Fragment(){
+
+
+    companion object {
+        const val REQUEST_KEY_MANUAL_LOCATION_SEARCH = "manualLocationSearch"
+        const val KEY_LOCATION_TEXT = "locationText"
+        const val KEY_LATITUDE = "latitude"
+        const val KEY_LONGITUDE = "longitude"
+    }
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = requireNotNull(_binding)
@@ -59,6 +69,7 @@ class HomeFragment : Fragment(){
         }
     }
 
+    private var isInitialLocationSet: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,10 +82,16 @@ class HomeFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setWeatherDataAdapter()
-        setWeatherData(currentLocation = sharedPreferencesManager.getCurrentLocation())
         setObservers()
+
+        if (!isInitialLocationSet) {
+            setCurrentLocation(currentLocation = sharedPreferencesManager.getCurrentLocation())
+            isInitialLocationSet = true
+        }
     }
+
 
     private fun setObservers(){
         with (homeViewModel){
@@ -86,13 +103,27 @@ class HomeFragment : Fragment(){
                 currentLocationDataState.currentLocation?.let { currentLocation->
                     hideLoading()
                     sharedPreferencesManager.saveCurrentLocation(currentLocation)
-                    setWeatherData(currentLocation)
+                    setCurrentLocation(currentLocation)
                 }
                 currentLocationDataState.error?.let { error->
                     hideLoading()
                     Toast.makeText(requireContext(),error,Toast.LENGTH_SHORT).show()
                 }
             }
+            weatherData.observe(viewLifecycleOwner) {
+                val weatherDataState = it.getContentIfNotHandled() ?: return@observe
+
+                binding.swipeRefreshLayout.isRefreshing = weatherDataState.isLoading
+
+                weatherDataState.currentWeather?.let { currentWeather ->
+                    weatherDataAdapter.setCurrentWeather(currentWeather)
+                }
+
+                weatherDataState.error?.let { error ->
+                    Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+                }
+            }
+
         }
     }
 
@@ -101,11 +132,13 @@ class HomeFragment : Fragment(){
         binding.weatherDataRecyclerView.adapter=weatherDataAdapter
     }
 
-    private fun setWeatherData(currentLocation: CurrentLocation?=null) {
-        weatherDataAdapter.setData(
-            data = listOf(currentLocation?: CurrentLocation())
-        )
+    private fun setCurrentLocation(currentLocation: CurrentLocation? = null) {
+        weatherDataAdapter.setCurrentLocation(currentLocation ?: CurrentLocation())
+        currentLocation?.let {
+            getWeatherData(currentLocation = it)
+        }
     }
+
 
 
     private fun getCurrentLocation(){
@@ -157,7 +190,37 @@ class HomeFragment : Fragment(){
         }
     }
 
-    private fun startManualLocationSearch(){
-        findNavController().navigate(R.id.action_home_fragment_to_location_fragment)
+private fun startManualLocationSearch() {
+    startListeningManualLocationSelection()
+    findNavController().navigate(R.id.action_home_fragment_to_location_fragment)
+}
+
+private fun startListeningManualLocationSelection() {
+    setFragmentResultListener(REQUEST_KEY_MANUAL_LOCATION_SEARCH) { _, bundle ->
+        stopListeningManualLocationSelection()
+
+        val currentLocation = CurrentLocation(
+            location = bundle.getString(KEY_LOCATION_TEXT) ?: "N/A",
+            latitude = bundle.getDouble(KEY_LATITUDE),
+            longitude = bundle.getDouble(KEY_LONGITUDE)
+        )
+
+        sharedPreferencesManager.saveCurrentLocation(currentLocation)
+        setCurrentLocation(currentLocation)
     }
+}
+
+private fun stopListeningManualLocationSelection() {
+    clearFragmentResultListener(REQUEST_KEY_MANUAL_LOCATION_SEARCH)
+}
+
+    private fun getWeatherData(currentLocation: CurrentLocation) {
+        if (currentLocation.latitude != null && currentLocation.longitude != null) {
+            homeViewModel.getWeatherData(
+                latitude = currentLocation.latitude,
+                longitude = currentLocation.longitude
+            )
+        }
+    }
+
 }

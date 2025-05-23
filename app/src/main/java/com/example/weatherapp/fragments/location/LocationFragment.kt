@@ -96,6 +96,7 @@ class LocationFragment : Fragment() {
                 Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
             }
         }
+
     }
 
 
