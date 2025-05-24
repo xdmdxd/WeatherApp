@@ -71,9 +71,17 @@ class LocationFragment : Fragment() {
     }
 
 
-    private fun setLocation(remoteLocation: RemoteLocation){
+    private fun setLocation(remoteLocation: RemoteLocation) {
+        val result = Bundle().apply {
+            putString("locationText", remoteLocation.name)
+            putDouble("latitude", remoteLocation.lat)
+            putDouble("longitude", remoteLocation.lon)
+        }
 
+        parentFragmentManager.setFragmentResult("manualLocationSearch", result)
+        findNavController().popBackStack()
     }
+
 
 
     private fun setObservers() {

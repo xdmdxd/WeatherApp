@@ -118,6 +118,9 @@ class HomeFragment : Fragment(){
                 weatherDataState.currentWeather?.let { currentWeather ->
                     weatherDataAdapter.setCurrentWeather(currentWeather)
                 }
+                weatherDataState.forecast?.let { forecasts ->
+                    weatherDataAdapter.setForecastData(forecasts)
+                }
 
                 weatherDataState.error?.let { error ->
                     Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
