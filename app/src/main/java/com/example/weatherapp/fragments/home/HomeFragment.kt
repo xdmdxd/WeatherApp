@@ -18,6 +18,8 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import com.example.weatherapp.R
 import com.example.weatherapp.data.CurrentLocation
+import com.example.weatherapp.data.CurrentWeather
+import com.example.weatherapp.data.Forecast
 import com.example.weatherapp.databinding.FragmentHomeBinding
 import com.example.weatherapp.depencency_injection.viewModelModule
 import com.example.weatherapp.storage.SharedPreferencesManager
@@ -125,10 +127,13 @@ class HomeFragment : Fragment(){
                 weatherDataState.error?.let { error ->
                     Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
                 }
+
             }
 
         }
     }
+
+
 
     private fun setWeatherDataAdapter(){
 

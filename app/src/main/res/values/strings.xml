@@ -4,4 +4,8 @@
     <string name="wind">Wind</string>
     <string name="humidity">Humidity</string>
     <string name="chance_of_rain">Chance of rain</string>
+    <string name="favorite_cities">Favorite Cities</string>
+    <string name="paris_france">Paris, France</string>
+    <string name="delete_city">Delete City</string>
+    <string name="favorite_city">Favorite City</string>
 </resources>

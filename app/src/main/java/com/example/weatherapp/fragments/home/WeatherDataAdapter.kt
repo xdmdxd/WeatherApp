@@ -152,6 +152,11 @@ class WeatherDataAdapter(
         }
     }
 
+    fun clear() {
+        val size = weatherData.size
+        weatherData.clear()
+        notifyItemRangeRemoved(0, size)
+    }
 
 
 }
