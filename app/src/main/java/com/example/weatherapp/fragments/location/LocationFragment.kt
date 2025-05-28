@@ -72,8 +72,22 @@ class LocationFragment : Fragment() {
 
 
     private fun setLocation(remoteLocation: RemoteLocation) {
+        val geocoder = android.location.Geocoder(requireContext())
+        val addresses = geocoder.getFromLocation(remoteLocation.lat, remoteLocation.lon, 1)
+
+        val fullName = if (!addresses.isNullOrEmpty()) {
+            listOfNotNull(
+                addresses[0].featureName,
+                addresses[0].locality,
+                addresses[0].adminArea,
+                addresses[0].countryName
+            ).distinct().joinToString(", ")
+        } else {
+            remoteLocation.name
+        }
+
         val result = Bundle().apply {
-            putString("locationText", remoteLocation.name)
+            putString("locationText", fullName)
             putDouble("latitude", remoteLocation.lat)
             putDouble("longitude", remoteLocation.lon)
         }
@@ -81,6 +95,7 @@ class LocationFragment : Fragment() {
         parentFragmentManager.setFragmentResult("manualLocationSearch", result)
         findNavController().popBackStack()
     }
+
 
 
 

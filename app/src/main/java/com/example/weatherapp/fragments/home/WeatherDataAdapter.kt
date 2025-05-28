@@ -101,16 +101,25 @@ class WeatherDataAdapter(
     inner class CurrentLocationViewHolder(
         private val binding: ItemContainerCurrentLocationBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(currentLocation: CurrentLocation) {
             with(binding) {
+                // Nastavení aktuálního data (pokud potřebuješ ho generovat, musí být v currentLocation)
                 textCurrentDate.text = currentLocation.date
+
+                // Tohle je klíčové: zobraz celý název lokace
                 textCurrentLocation.text = currentLocation.location
+
+                // Kliknutí na text nebo ikonu → znovu vybrat lokaci
                 imageCurrentLocation.setOnClickListener { onLocationClicked() }
                 textCurrentLocation.setOnClickListener { onLocationClicked() }
-                imageFavorite.setOnClickListener { onFavoriteClicked() } // ⭐ NEW
+
+                // Kliknutí na hvězdičku → přidat do oblíbených
+                imageFavorite.setOnClickListener { onFavoriteClicked() }
             }
         }
     }
+
 
     inner class CurrentWeatherViewHolder(
         private val binding: ItemContainerCurrentWeatherBinding
