@@ -7,7 +7,8 @@ import com.example.weatherapp.databinding.ItemFavoriteCityBinding
 
 class FavoriteCitiesAdapter(
     private val cities: MutableList<String>,
-    private val onDeleteClicked: (String) -> Unit
+    private val onDeleteClicked: (String) -> Unit,
+    private val onCityClicked: (String) -> Unit
 ) : RecyclerView.Adapter<FavoriteCitiesAdapter.CityViewHolder>() {
 
     inner class CityViewHolder(private val binding: ItemFavoriteCityBinding)
@@ -15,6 +16,11 @@ class FavoriteCitiesAdapter(
 
         fun bind(cityName: String) {
             binding.textCityName.text = cityName
+
+            binding.textCityName.setOnClickListener {
+                onCityClicked(cityName)
+            }
+
             binding.imageDelete.setOnClickListener {
                 onDeleteClicked(cityName)
             }
@@ -42,3 +48,4 @@ class FavoriteCitiesAdapter(
         }
     }
 }
+

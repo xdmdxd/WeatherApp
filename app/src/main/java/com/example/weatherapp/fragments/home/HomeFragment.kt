@@ -79,6 +79,16 @@ class HomeFragment : Fragment() {
             setCurrentLocation(sharedPreferencesManager.getCurrentLocation())
             isInitialLocationSet = true
         }
+        setFragmentResultListener(REQUEST_KEY_MANUAL_LOCATION_SEARCH) { _, bundle ->
+            val currentLocation = CurrentLocation(
+                location = bundle.getString(KEY_LOCATION_TEXT) ?: "N/A",
+                latitude = bundle.getDouble(KEY_LATITUDE),
+                longitude = bundle.getDouble(KEY_LONGITUDE)
+            )
+
+            sharedPreferencesManager.saveCurrentLocation(currentLocation)
+            setCurrentLocation(currentLocation)
+        }
     }
 
     private fun setObservers() {
