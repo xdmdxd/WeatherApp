@@ -51,4 +51,10 @@ class SharedPreferencesManager(context: Context, private val gson: Gson) {
             remove(KEY_FAVORITE_CITIES)
         }
     }
+    fun removeFavoriteCity(cityName: String) {
+        val favorites = getFavoriteCities().toMutableSet()
+        favorites.remove(cityName)
+        saveFavoriteCities(favorites)
+    }
+
 }

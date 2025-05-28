@@ -14,39 +14,28 @@ import org.koin.android.ext.android.inject
 
 class FavoriteCitiesFragment : Fragment() {
 
-    private var _binding: FragmentFavoriteCitiesBinding? = null
-    private val binding get() = requireNotNull(_binding)
-
-    private val sharedPreferencesManager: SharedPreferencesManager by inject()
+    private lateinit var binding: FragmentFavoriteCitiesBinding
     private lateinit var adapter: FavoriteCitiesAdapter
+    private val sharedPreferencesManager: SharedPreferencesManager by inject()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentFavoriteCitiesBinding.inflate(inflater, container, false)
+        binding = FragmentFavoriteCitiesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val favoriteCities = sharedPreferencesManager.getFavoriteCities().toList()
-
-        adapter = FavoriteCitiesAdapter(favoriteCities) { selectedCity ->
-            Toast.makeText(requireContext(), "Vybráno: $selectedCity", Toast.LENGTH_SHORT).show()
-            // Optionally, go back to HomeFragment with selectedCity
-            findNavController().navigateUp()
+        val favoriteCities = sharedPreferencesManager.getFavoriteCities().toMutableList()
+        adapter = FavoriteCitiesAdapter(favoriteCities) { cityToDelete ->
+            sharedPreferencesManager.removeFavoriteCity(cityToDelete)
+            adapter.removeCity(cityToDelete)
+            Toast.makeText(requireContext(), "$cityToDelete odstraněno", Toast.LENGTH_SHORT).show()
         }
 
-        binding.favoritesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.favoritesRecyclerView.adapter = adapter
-
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
+

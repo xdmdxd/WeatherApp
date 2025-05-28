@@ -6,16 +6,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.databinding.ItemFavoriteCityBinding
 
 class FavoriteCitiesAdapter(
-    private val cities: List<String>,
-    private val onCityClick: (String) -> Unit
+    private val cities: MutableList<String>,
+    private val onDeleteClicked: (String) -> Unit
 ) : RecyclerView.Adapter<FavoriteCitiesAdapter.CityViewHolder>() {
 
-    inner class CityViewHolder(private val binding: ItemFavoriteCityBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(city: String) {
-            binding.textCityName.text = city
-            binding.root.setOnClickListener {
-                onCityClick(city)
+    inner class CityViewHolder(private val binding: ItemFavoriteCityBinding)
+        : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(cityName: String) {
+            binding.textCityName.text = cityName
+            binding.imageDelete.setOnClickListener {
+                onDeleteClicked(cityName)
             }
         }
     }
@@ -27,9 +28,17 @@ class FavoriteCitiesAdapter(
         return CityViewHolder(binding)
     }
 
+    override fun getItemCount() = cities.size
+
     override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
         holder.bind(cities[position])
     }
 
-    override fun getItemCount(): Int = cities.size
+    fun removeCity(cityName: String) {
+        val index = cities.indexOf(cityName)
+        if (index != -1) {
+            cities.removeAt(index)
+            notifyItemRemoved(index)
+        }
+    }
 }
