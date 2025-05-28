@@ -205,11 +205,20 @@ class HomeFragment : Fragment() {
         setFragmentResultListener(REQUEST_KEY_MANUAL_LOCATION_SEARCH) { _, bundle ->
             stopListeningManualLocationSelection()
 
+            val cityName = bundle.getString(KEY_LOCATION_TEXT) ?: "N/A"
+            val latitude = bundle.getDouble(KEY_LATITUDE)
+            val longitude = bundle.getDouble(KEY_LONGITUDE)
+
+// Try to get the "pretty" address name using geocoder
+            val addressList = geocoder.getFromLocation(latitude, longitude, 1)
+            val resolvedName = addressList?.firstOrNull()?.getAddressLine(0) ?: cityName
+
             val currentLocation = CurrentLocation(
-                location = bundle.getString(KEY_LOCATION_TEXT) ?: "N/A",
-                latitude = bundle.getDouble(KEY_LATITUDE),
-                longitude = bundle.getDouble(KEY_LONGITUDE)
+                location = resolvedName,
+                latitude = latitude,
+                longitude = longitude
             )
+
 
             sharedPreferencesManager.saveCurrentLocation(currentLocation)
             setCurrentLocation(currentLocation)
