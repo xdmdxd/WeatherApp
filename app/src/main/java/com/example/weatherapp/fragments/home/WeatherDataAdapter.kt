@@ -1,6 +1,5 @@
 package com.example.weatherapp.fragments.home
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -14,9 +13,9 @@ import com.example.weatherapp.databinding.ItemContainerCurrentWeatherBinding
 import com.example.weatherapp.databinding.ItemContainerForecastBinding
 
 class WeatherDataAdapter(
-    private val onLocationClicked: () -> Unit
+    private val onLocationClicked: () -> Unit,
+    private val onFavoriteClicked: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
 
     private companion object {
         const val INDEX_CURRENT_LOCATION = 0
@@ -45,6 +44,7 @@ class WeatherDataAdapter(
             notifyItemInserted(INDEX_CURRENT_WEATHER)
         }
     }
+
     fun setForecastData(forecast: List<Forecast>) {
         weatherData.removeAll { it is Forecast }
         notifyItemRangeRemoved(INDEX_FORECAST, weatherData.size)
@@ -61,6 +61,7 @@ class WeatherDataAdapter(
                     false
                 )
             )
+
             INDEX_FORECAST -> ForecastViewHolder(
                 ItemContainerForecastBinding.inflate(
                     LayoutInflater.from(parent.context),
@@ -79,7 +80,6 @@ class WeatherDataAdapter(
         }
     }
 
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is CurrentLocationViewHolder -> holder.bind(weatherData[position] as CurrentLocation)
@@ -88,10 +88,7 @@ class WeatherDataAdapter(
         }
     }
 
-
-    override fun getItemCount(): Int {
-        return weatherData.size
-    }
+    override fun getItemCount(): Int = weatherData.size
 
     override fun getItemViewType(position: Int): Int {
         return when (weatherData[position]) {
@@ -100,8 +97,6 @@ class WeatherDataAdapter(
             is Forecast -> INDEX_FORECAST
         }
     }
-
-
 
     inner class CurrentLocationViewHolder(
         private val binding: ItemContainerCurrentLocationBinding
@@ -112,6 +107,7 @@ class WeatherDataAdapter(
                 textCurrentLocation.text = currentLocation.location
                 imageCurrentLocation.setOnClickListener { onLocationClicked() }
                 textCurrentLocation.setOnClickListener { onLocationClicked() }
+                imageFavorite.setOnClickListener { onFavoriteClicked() } // ⭐ NEW
             }
         }
     }
@@ -119,34 +115,29 @@ class WeatherDataAdapter(
     inner class CurrentWeatherViewHolder(
         private val binding: ItemContainerCurrentWeatherBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-
         fun bind(currentWeather: CurrentWeather) {
             with(binding) {
                 imageIcon.load(data = "https:${currentWeather.icon}") {
-                    crossfade(enable = true)
+                    crossfade(true)
                 }
-
-                textTemperature.text = String.format("%s\u00B0C", currentWeather.temperature)
-                textWind.text = String.format("%s km/h", currentWeather.wind)
-                textHumidity.text = String.format("%s%%", currentWeather.humidity)
-                textChanceOfRain.text = String.format("%s%%", currentWeather.chanceOfRain)
+                textTemperature.text = "${currentWeather.temperature}°C"
+                textWind.text = "${currentWeather.wind} km/h"
+                textHumidity.text = "${currentWeather.humidity}%"
+                textChanceOfRain.text = "${currentWeather.chanceOfRain}%"
             }
         }
     }
 
-
     inner class ForecastViewHolder(
         private val binding: ItemContainerForecastBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-
         fun bind(forecast: Forecast) {
             with(binding) {
                 textTime.text = forecast.time
-                textTemperature.text = String.format("%s\u00B0C", forecast.temperature)
-                textFeelsLikeTemperature.text =
-                    String.format("%s\u00B0C", forecast.feelsLikeTemperature)
+                textTemperature.text = "${forecast.temperature}°C"
+                textFeelsLikeTemperature.text = "${forecast.feelsLikeTemperature}°C"
                 imageIcon.load(data = "https://${forecast.icon}") {
-                    crossfade(enable = true)
+                    crossfade(true)
                 }
             }
         }
@@ -157,6 +148,4 @@ class WeatherDataAdapter(
         weatherData.clear()
         notifyItemRangeRemoved(0, size)
     }
-
-
 }
