@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,7 +86,6 @@ class HomeFragment : Fragment() {
                 latitude = bundle.getDouble(KEY_LATITUDE),
                 longitude = bundle.getDouble(KEY_LONGITUDE)
             )
-
             sharedPreferencesManager.saveCurrentLocation(currentLocation)
             setCurrentLocation(currentLocation)
         }
