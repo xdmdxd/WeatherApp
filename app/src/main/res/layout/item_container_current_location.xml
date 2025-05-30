@@ -53,19 +53,34 @@
         android:layout_height="@dimen/_22sdp"
         android:src="@drawable/round_my_location_24"
         android:tint="@color/sonic_silver"
-        app:layout_constraintBottom_toBottomOf="@id/imageLocation"
+        app:layout_constraintBottom_toBottomOf="@id/textCurrentLocation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/textCurrentDate" />
+        app:layout_constraintTop_toTopOf="@id/textCurrentLocation" />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageFavorite"
         android:layout_width="@dimen/_22sdp"
         android:layout_height="@dimen/_22sdp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="@dimen/_5sdp"
         android:contentDescription="@string/favorite_city"
         android:src="@drawable/star"
         android:tint="@color/sonic_silver"
         app:layout_constraintStart_toEndOf="@id/textCurrentDate"
         app:layout_constraintTop_toTopOf="@id/textCurrentDate"
         app:layout_constraintBottom_toBottomOf="@id/textCurrentDate" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageSettings"
+        android:layout_width="@dimen/_22sdp"
+        android:layout_height="@dimen/_22sdp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="@dimen/_sdp"
+        android:contentDescription="@string/settings"
+        android:src="@drawable/settings"
+        android:tint="@color/sonic_silver"
+        app:layout_constraintStart_toEndOf="@id/imageFavorite"
+        app:layout_constraintTop_toTopOf="@id/imageFavorite"
+        app:layout_constraintBottom_toBottomOf="@id/imageFavorite"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

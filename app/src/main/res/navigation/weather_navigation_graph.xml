@@ -32,4 +32,11 @@
         android:name="com.example.weatherapp.fragments.favorite.FavoriteCitiesFragment"
         android:label="Oblíbená města"
         tools:layout="@layout/fragment_favorite_cities" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.weatherapp.fragments.settings.SettingsFragment"
+        android:label="Nastavení"
+        tools:layout="@layout/fragment_settings" />
+
 </navigation>
