@@ -152,17 +152,19 @@ class HomeFragment : Fragment() {
     }
 
     private fun showLocationOption() {
-        val options = arrayOf("Aktuální poloha", "Vyhledat polohu")
+        val options = arrayOf("Aktuální poloha", "Vyhledat polohu", "Vybrat z mapy")
         AlertDialog.Builder(requireContext())
             .setTitle("Vybrat způsob lokace")
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> proceedWithCurrentLocation()
                     1 -> startManualLocationSearch()
+                    2 -> startMapLocationPicker() // ✅ Teď už funguje
                 }
             }
             .show()
     }
+
 
     private fun showFavoriteDialog() {
         val options = arrayOf("Přidat do oblíbených", "Zobrazit oblíbená města")
@@ -176,6 +178,11 @@ class HomeFragment : Fragment() {
             }
             .show()
     }
+    private fun startMapLocationPicker() {
+        startListeningManualLocationSelection()
+        findNavController().navigate(R.id.mapPickerFragment)
+    }
+
 
     private fun addCityToFavorites() {
         val currentLocation = sharedPreferencesManager.getCurrentLocation()

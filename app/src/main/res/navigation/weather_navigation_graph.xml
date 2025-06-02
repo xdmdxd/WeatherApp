@@ -34,9 +34,11 @@
         tools:layout="@layout/fragment_favorite_cities" />
 
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.example.weatherapp.fragments.settings.SettingsFragment"
-        android:label="Nastavení"
-        tools:layout="@layout/fragment_settings" />
+        android:id="@+id/mapPickerFragment"
+        android:name="com.example.weatherapp.fragments.map.MapPickerFragment"
+        android:label="Mapa"
+        tools:layout="@layout/fragment_map_picker" />
+
+
 
 </navigation>

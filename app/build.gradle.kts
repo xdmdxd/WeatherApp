@@ -77,4 +77,9 @@ dependencies {
 
     //swipe refrest layout
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    implementation("com.google.android.gms:play-services-maps:19.2.0")
+
+
+
 }
