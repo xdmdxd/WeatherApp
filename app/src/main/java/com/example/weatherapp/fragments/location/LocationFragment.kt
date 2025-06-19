@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethod
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.data.RemoteLocation
 import com.example.weatherapp.databinding.FragmentLocationBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.http.Query
 
 class LocationFragment : Fragment() {
 

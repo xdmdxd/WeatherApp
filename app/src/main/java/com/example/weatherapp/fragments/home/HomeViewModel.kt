@@ -1,7 +1,6 @@
 package com.example.weatherapp.fragments.home
 
 import android.location.Geocoder
-import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

@@ -40,6 +40,11 @@ class FavoriteCitiesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.imageBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+
         val favoriteCities = sharedPreferencesManager.getFavoriteCities().toMutableList()
 
         adapter = FavoriteCitiesAdapter(

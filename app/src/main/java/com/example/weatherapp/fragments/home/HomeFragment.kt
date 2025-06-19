@@ -220,6 +220,8 @@ class HomeFragment : Fragment() {
             val addressList = geocoder.getFromLocation(latitude, longitude, 1)
             val resolvedName = addressList?.firstOrNull()?.getAddressLine(0) ?: cityName
 
+
+
             val currentLocation = CurrentLocation(
                 location = resolvedName,
                 latitude = latitude,

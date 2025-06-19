@@ -65,7 +65,15 @@ class MapPickerFragment : Fragment(), OnMapReadyCallback {
 
             try {
                 val addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-                val locationName = addressList?.firstOrNull()?.getAddressLine(0) ?: "Vybraná poloha"
+                val address = addressList?.firstOrNull()
+
+                val city = address?.locality ?: address?.subAdminArea
+                val country = address?.countryName
+
+                val locationName = listOfNotNull(city, country)
+                    .joinToString(", ")
+                    .ifBlank { "Vybraná poloha" }
+
                 Log.d("MapPickerFragment", "Location name resolved: $locationName")
 
                 val result = Bundle().apply {

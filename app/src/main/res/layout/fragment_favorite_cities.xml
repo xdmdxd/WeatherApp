@@ -33,4 +33,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/item_favorite_city" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageBack"
+        android:layout_width="30dp"
+        android:layout_height="27dp"
+        android:background="@drawable/round_close_24"
+        android:padding="10dp"
+        android:src="@drawable/round_close_24"
+        android:tint="@color/sonic_silver"
+        app:layout_constraintBottom_toBottomOf="@id/textTitleFavorites"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textTitleFavorites" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
